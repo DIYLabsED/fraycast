@@ -77,7 +77,7 @@ jobs:
         if: matrix.archive_ext == 'tar.gz'
         shell: bash
         run: |
-          ARCHIVE_NAME="fraycast_${{ GITHUB_REF_NAME }}_${{ matrix.platform }}.tar.gz"
+          ARCHIVE_NAME="fraycast_${{ steps.version.outputs.version }}_${{ matrix.platform }}.tar.gz"
 
           tar -czf "$ARCHIVE_NAME" -C package .
 
@@ -87,7 +87,7 @@ jobs:
         if: matrix.archive_ext == 'zip'
         shell: pwsh
         run: |
-          $archive = "fraycast_${{ GITHUB_REF_NAME }}_${{ matrix.platform }}.zip"
+          $archive = "fraycast_${{ steps.version.outputs.version }}_${{ matrix.platform }}.zip"
 
           Compress-Archive -Path package\* -DestinationPath $archive
 
