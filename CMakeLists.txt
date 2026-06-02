@@ -20,7 +20,14 @@ configure_file(
 FetchContent_Declare(fmt GIT_REPOSITORY https://github.com/fmtlib/fmt.git GIT_TAG 12.1.0)
 FetchContent_MakeAvailable(fmt)
 
-# PWC
+FetchContent_Declare(
+        SDL3
+        GIT_REPOSITORY https://github.com/libsdl-org/SDL.git
+        GIT_TAG release-3.4.10
+)
+FetchContent_MakeAvailable(SDL3)
+
+# FrayCast
 set(FRAYCAST_HEADERS)
 set(FRAYCAST_SOURCES
 
@@ -30,6 +37,7 @@ set(FRAYCAST_SOURCES
 
 add_executable(fraycast ${FRAYCAST_SOURCES} ${FRAYCAST_HEADERS})
 target_link_libraries(fraycast PUBLIC fmt::fmt)
+target_link_libraries(fraycast PUBLIC SDL3::SDL3)
 
 target_include_directories(fraycast
         PUBLIC
