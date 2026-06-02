@@ -1,0 +1,107 @@
+name: Build and Release
+
+on:
+  push:
+    tags:
+      - "v*"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    name: Build (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-latest
+            platform: linux
+            archive_ext: tar.gz
+            executable: fraycast
+
+          - os: windows-latest
+            platform: windows
+            archive_ext: zip
+            executable: fraycast.exe
+
+          - os: macos-latest
+            platform: macos
+            archive_ext: tar.gz
+            executable: fraycast
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup CMake
+        uses: lukka/get-cmake@latest
+
+      - name: Configure
+        run: >
+          cmake -B build
+          -DCMAKE_BUILD_TYPE=Release
+          -DFRAYCAST_BUILD_NOTES="Built with machine love by a GitHub Action"
+
+      - name: Build
+        run: >
+          cmake --build build --config Release
+
+      - name: Determine version
+        id: version
+        shell: bash
+        run: |
+          if [[ "${GITHUB_REF_TYPE}" == "tag" ]]; then
+            VERSION="${GITHUB_REF_NAME}"
+          else
+            VERSION="dev-${GITHUB_SHA::7}"
+          fi
+
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+
+      - name: Create archive directory
+        shell: bash
+        run: |
+          mkdir package
+
+          if [[ "${{ matrix.os }}" == "windows-latest" ]]; then
+            cp build/Release/${{ matrix.executable }} package/
+          else
+            cp build/${{ matrix.executable }} package/
+          fi
+
+      - name: Create archive (Unix)
+        if: matrix.archive_ext == 'tar.gz'
+        shell: bash
+        run: |
+          ARCHIVE_NAME="pwc_${{ steps.version.outputs.version }}_${{ matrix.platform }}.tar.gz"
+
+          tar -czf "$ARCHIVE_NAME" -C package .
+
+          echo "ARCHIVE_NAME=$ARCHIVE_NAME" >> $GITHUB_ENV
+
+      - name: Create archive (Windows)
+        if: matrix.archive_ext == 'zip'
+        shell: pwsh
+        run: |
+          $archive = "pwc_${{ steps.version.outputs.version }}_${{ matrix.platform }}.zip"
+
+          Compress-Archive -Path package\* -DestinationPath $archive
+
+          echo "ARCHIVE_NAME=$archive" >> $env:GITHUB_ENV
+
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ env.ARCHIVE_NAME }}
+          path: ${{ env.ARCHIVE_NAME }}
+
+      - name: Upload to latest release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: latest
+          files: ${{ env.ARCHIVE_NAME }}
+          make_latest: true

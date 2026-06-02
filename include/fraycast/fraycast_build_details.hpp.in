@@ -1,0 +1,20 @@
+#pragma once
+
+#include <string>
+
+namespace pwc{
+
+inline const std::string PWC_BUILD_ARCH = "@PWC_BUILD_ARCH@";
+inline const std::string PWC_BUILD_TYPE = "@PWC_BUILD_TYPE@";
+inline const std::string PWC_BUILD_PLATFORM = "@PWC_BUILD_PLATFORM@";
+inline const std::string PWC_BUILD_TIME = "@PWC_BUILD_TIME@";
+inline const std::string PWC_BUILD_NOTES = "@PWC_BUILD_NOTES@";
+inline const std::string PWC_REPO_URL = "@PWC_REPO_URL@";
+
+inline constexpr int BUILD_VERSION_MAJOR = @PROJECT_VERSION_MAJOR@;
+inline constexpr int BUILD_VERSION_MINOR = @PROJECT_VERSION_MINOR@;
+inline constexpr int BUILD_VERSION_PATCH = @PROJECT_VERSION_PATCH@;
+
+inline const std::string BUILD_VERSION_STRING = "@PROJECT_VERSION@";
+
+}
