@@ -2,8 +2,8 @@
 #include <SDL3/SDL.h>
 
 
-const int lodevMapWidth = 24, lodevMapHeight = 24;
-int lodevMap[lodevMapWidth][lodevMapHeight]=
+const int MAP_WIDTH = 24, MAP_HEIGHT = 24;
+int lodevMap[MAP_WIDTH][MAP_HEIGHT]=
 {
   {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
   {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
@@ -45,7 +45,10 @@ const int SCREEN_HEIGHT = 480;
 #define COLOR_DIM_YELLOW 128, 128, 0, 255
 
 
-void raycast(SDL_Renderer* renderer);
+void raycast(SDL_Renderer* renderer, int map[MAP_HEIGHT][MAP_WIDTH], double playerPosX, double playerPosY);
+void movePlayer(const bool* keys);
+
+double playerX = 5, playerY = 5;
 
 
 int main(){
@@ -73,10 +76,12 @@ int main(){
       }
     }
 
+    movePlayer(SDL_GetKeyboardState(NULL));
+
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
     SDL_RenderClear(renderer);
 
-    raycast(renderer);
+    raycast(renderer, lodevMap, playerX, playerY);
 
     SDL_RenderPresent(renderer);
 
@@ -89,10 +94,9 @@ int main(){
 
 }
 
-void raycast(SDL_Renderer* renderer){
+void raycast(SDL_Renderer* renderer, int map[MAP_WIDTH][MAP_HEIGHT], double playerPosX, double playerPosY){
 
   // Player and camera variables
-  double playerPosX = 12, playerPosY = 20;
   double lookDirX = -1, lookDirY = 0;
   double cameraPlaneX = 0, cameraPlaneY = 0.66;
 
@@ -156,7 +160,7 @@ void raycast(SDL_Renderer* renderer){
       }
 
       // Check if ray has hit a wall
-      if(lodevMap[mapCellX][mapCellY] > 0) hit = 1;
+      if(map[mapCellX][mapCellY] > 0) hit = 1;
 
       // Calculate length of ray
       if(side == 0) distanceToWall = (raySideDistX - rayDeltaDistX);
@@ -170,7 +174,7 @@ void raycast(SDL_Renderer* renderer){
     int lineDrawStart = lineOffset;
     int lineDrawEnd = lineOffset + lineHeight;
 
-    switch(lodevMap[mapCellX][mapCellY]){
+    switch(map[mapCellX][mapCellY]){
 
       case 1:
         if(side == 1) SDL_SetRenderDrawColor(renderer, COLOR_DIM_RED);
@@ -196,6 +200,28 @@ void raycast(SDL_Renderer* renderer){
 
     SDL_RenderLine(renderer, screenX, lineDrawStart, screenX, lineDrawEnd);
 
+  }
+
+}
+
+void movePlayer(const bool* keys){
+
+  const double moveSpeed = 0.001;
+
+  if(keys[SDL_SCANCODE_W]){
+    playerX -= moveSpeed;
+  }
+
+  if(keys[SDL_SCANCODE_S]){
+    playerX += moveSpeed;
+  }
+
+  if(keys[SDL_SCANCODE_A]){
+    playerY -= moveSpeed;
+  }
+
+  if(keys[SDL_SCANCODE_D]){
+    playerY += moveSpeed;
   }
 
 }
