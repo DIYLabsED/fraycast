@@ -28,7 +28,9 @@ FetchContent_Declare(
 FetchContent_MakeAvailable(SDL3)
 
 # FrayCast
-set(FRAYCAST_HEADERS)
+set(FRAYCAST_HEADERS
+        include/fraycast/RaycastMap.hpp
+        include/fraycast/ExampleMaps.hpp)
 set(FRAYCAST_SOURCES
 
         src/main.cpp
