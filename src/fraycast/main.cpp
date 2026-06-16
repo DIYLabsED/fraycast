@@ -1,6 +1,7 @@
 #include <iostream>
 #include <SDL3/SDL.h>
 
+#include <tengine/util/logger/logger.hpp>
 
 const int MAP_WIDTH = 24, MAP_HEIGHT = 24;
 int lodevMap[MAP_WIDTH][MAP_HEIGHT]=
@@ -31,8 +32,8 @@ int lodevMap[MAP_WIDTH][MAP_HEIGHT]=
   {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1}
 };
 
-const int SCREEN_WIDTH = 640;
-const int SCREEN_HEIGHT = 480;
+const int SCREEN_WIDTH = 1000;
+const int SCREEN_HEIGHT = 1000;
 
 #define COLOR_RED 255, 0, 0, 255
 #define COLOR_GREEN 0, 255, 0, 255
@@ -98,7 +99,7 @@ void raycast(SDL_Renderer* renderer, int map[MAP_WIDTH][MAP_HEIGHT], double play
 
   // Player and camera variables
   double lookDirX = -1, lookDirY = 0;
-  double cameraPlaneX = 0, cameraPlaneY = 0.66;
+  double cameraPlaneX = 0, cameraPlaneY = 0.2;
 
   // Loop over each x coordinate on screen
   for(int screenX = 0; screenX < SCREEN_WIDTH; screenX++){
@@ -169,7 +170,7 @@ void raycast(SDL_Renderer* renderer, int map[MAP_WIDTH][MAP_HEIGHT], double play
     }
 
     // Draw line on screen
-    int lineHeight = (int)(SCREEN_HEIGHT / distanceToWall);
+    int lineHeight = (int)(SCREEN_HEIGHT / distanceToWall) * 1.5;
     int lineOffset = (int)(SCREEN_HEIGHT - lineHeight) / 2;
     int lineDrawStart = lineOffset;
     int lineDrawEnd = lineOffset + lineHeight;
