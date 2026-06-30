@@ -16,5 +16,6 @@ int main(int argc, char** argv){
 
   std::cout << "exists called on --cfg: " << argParse.exists("--cfg") << std::endl;
   std::cout << "getarg called on --cfg: " << argParse.getArg("--cfg") << std::endl;
+  std::cout << "getarg called on --cfg with fallback: " << argParse.getArg("--cfg", "cfg/core.tcfg") << std::endl;
 
 }

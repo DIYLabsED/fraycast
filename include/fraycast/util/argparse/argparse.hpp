@@ -25,16 +25,16 @@ public:
 
   }
 
-  std::string getArg(const std::string& name){
+  std::string getArg(const std::string& name, const std::string& fallback = ""){
 
-    if(!exists(name)){ return ""; }
+    if(!exists(name)){ return fallback; }
 
     for(int i = 0; i < m_args.size(); i++){
 
       if(m_args[i] == name){
 
         if(i == m_args.size() - 1){
-          return "";
+          return fallback;
         }
 
         return m_args[i + 1];
@@ -42,7 +42,7 @@ public:
 
     }
 
-    return "";
+    return fallback;
 
   }
 
