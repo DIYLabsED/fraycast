@@ -29,6 +29,7 @@ FetchContent_MakeAvailable(SDL3)
 
 # FrayCast
 set(FRAYCAST_HEADERS
+        include/fraycast/global/global.hpp
 
 )
 set(FRAYCAST_SOURCES

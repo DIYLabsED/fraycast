@@ -1,4 +1,5 @@
 #include <iostream>
+#include <cmath>
 #include <SDL3/SDL.h>
 
 #include <tengine/util/logger/logger.hpp>
@@ -50,6 +51,8 @@ void raycast(SDL_Renderer* renderer, int map[MAP_HEIGHT][MAP_WIDTH], double play
 void movePlayer(const bool* keys);
 
 double playerX = 5, playerY = 5;
+double lookDirX = -1, lookDirY = 0;
+double cameraPlaneX = 0, cameraPlaneY = 0.2;
 
 
 int main(){
@@ -62,7 +65,7 @@ int main(){
     return 1;
   }
 
-  if(!SDL_CreateWindowAndRenderer("Fraycast", SCREEN_WIDTH, SCREEN_HEIGHT, 0, &window, &renderer)){
+  if(!SDL_CreateWindowAndRenderer("Fraycast", SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_BORDERLESS, &window, &renderer)){
     std::cerr << "SDL window and render init failed with error " << SDL_GetError() << std::endl;
     return 1;
   }
@@ -96,10 +99,6 @@ int main(){
 }
 
 void raycast(SDL_Renderer* renderer, int map[MAP_WIDTH][MAP_HEIGHT], double playerPosX, double playerPosY){
-
-  // Player and camera variables
-  double lookDirX = -1, lookDirY = 0;
-  double cameraPlaneX = 0, cameraPlaneY = 0.2;
 
   // Loop over each x coordinate on screen
   for(int screenX = 0; screenX < SCREEN_WIDTH; screenX++){
@@ -207,22 +206,47 @@ void raycast(SDL_Renderer* renderer, int map[MAP_WIDTH][MAP_HEIGHT], double play
 
 void movePlayer(const bool* keys){
 
-  const double moveSpeed = 0.001;
+  const double moveSpeed = 0.002;
+  const double rotSpeed = 0.001;
 
   if(keys[SDL_SCANCODE_W]){
-    playerX -= moveSpeed;
+    playerX -= lookDirX * moveSpeed;
   }
 
   if(keys[SDL_SCANCODE_S]){
-    playerX += moveSpeed;
+    playerX += lookDirX * moveSpeed;
   }
 
   if(keys[SDL_SCANCODE_A]){
-    playerY -= moveSpeed;
+    playerY -= lookDirY * moveSpeed;
   }
 
   if(keys[SDL_SCANCODE_D]){
-    playerY += moveSpeed;
+    playerY += lookDirY * moveSpeed;
+  }
+
+  if(keys[SDL_SCANCODE_Q]){
+
+    double oldLookDirX = lookDirX;
+    lookDirX = lookDirX * cos(-rotSpeed) - lookDirY * sin(-rotSpeed);
+    lookDirY = oldLookDirX * sin(-rotSpeed) + lookDirY * cos(-rotSpeed);
+
+    double oldPlaneX = cameraPlaneX;
+    cameraPlaneX = cameraPlaneX * cos(-rotSpeed) - cameraPlaneY * sin(-rotSpeed);
+    cameraPlaneY = oldPlaneX * sin(-rotSpeed) + cameraPlaneY * cos(-rotSpeed);
+
+  }
+
+  if(keys[SDL_SCANCODE_E]){
+
+    double oldLookDirX = lookDirX;
+    lookDirX = lookDirX * cos(rotSpeed) - lookDirY * sin(rotSpeed);
+    lookDirY = oldLookDirX * sin(rotSpeed) + lookDirY * cos(rotSpeed);
+
+    double oldPlaneX = cameraPlaneX;
+    cameraPlaneX = cameraPlaneX * cos(rotSpeed) - cameraPlaneY * sin(rotSpeed);
+    cameraPlaneY = oldPlaneX * sin(rotSpeed) + cameraPlaneY * cos(rotSpeed);
+
   }
 
 }
