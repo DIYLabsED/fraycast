@@ -1,5 +1,7 @@
 #pragma once
 
+#include <fraycast/util/argparse/argparse.hpp>
+
 namespace fraycast{
 
 struct fraycast_globals_t{
@@ -12,8 +14,11 @@ struct fraycast_globals_t{
   bool    CFG_WIN_GRABS_MOUSE     = true;
   bool    CFG_WIN_GRABS_KEYBOARD  = false;
 
+  // --- Pointers to various utilites --
+  ARGParse* cmdline               = nullptr;
+
 };
 
-fraycast_globals_t fraycastGlobals;
+inline fraycast_globals_t fraycastGlobals;
 
 }
