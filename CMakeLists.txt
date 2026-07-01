@@ -2,6 +2,9 @@ cmake_minimum_required(VERSION 4.1)
 project(fraycast VERSION 0.0.0 LANGUAGES CXX)
 set(CMAKE_CXX_STANDARD 17)
 
+set(OUTPUT_DIR ${CMAKE_BINARY_DIR}/bin)
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${OUTPUT_DIR})
+
 include(FetchContent)
 
 # Build metadata
@@ -29,13 +32,32 @@ FetchContent_MakeAvailable(SDL3)
 
 # FrayCast
 set(FRAYCAST_HEADERS
+
         include/fraycast/global/global.hpp
         include/fraycast/util/argparse/argparse.hpp
+
+        include/tengine/util/logger/filter.hpp
+        include/tengine/util/logger/i_logsink.hpp
+        include/tengine/util/logger/logger.hpp
+        include/tengine/util/logger/logger_macros.hpp
+        include/tengine/util/logger/log_level.hpp
+        include/tengine/util/logger/sinks/file_sink.hpp
+        include/tengine/util/logger/sinks/terminal_sink.hpp
+        include/tengine/util/cfgparse/cfg_node.hpp
+        include/tengine/util/cfgparse/parser.hpp
+        include/tengine/util/cfgparse/serializer.hpp
+        include/tengine/util/filesystem/recur_file_by_ext.hpp
 
 )
 set(FRAYCAST_SOURCES
 
         src/fraycast/main.cpp
+
+        src/tengine/util/logger/logger.cpp
+        src/tengine/util/logger/sinks/terminal_sink.cpp
+        src/tengine/util/logger/sinks/file_sink.cpp
+        src/tengine/util/cfgparse/parser.cpp
+        src/tengine/util/cfgparse/serializer.cpp
 
 )
 
@@ -49,3 +71,5 @@ target_include_directories(fraycast
         $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/generated>
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/thirdparty/include>
 )
+
+file(COPY "${CMAKE_CURRENT_SOURCE_DIR}/fraycast-assets" DESTINATION "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}")

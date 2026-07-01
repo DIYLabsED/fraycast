@@ -1,0 +1,23 @@
+// --- Fraycast Core Config File ---
+// No touchy! It-it's not like I want you to change Fraycast's configuration or anything, hmph~!
+// -DIY, one tsundere to rule them all
+
+fraycast_core_config{
+
+    sdl_window_flags{
+
+        resizeable = false
+        win_width = 640
+        win_height = 480
+        fullscreen = false
+        grabs_mouse = false
+        grabs_keyboard = false
+
+    }
+
+    scan_path{
+        path = "fraycast-assets/"
+        ext = "fcfg"
+    }
+
+}
