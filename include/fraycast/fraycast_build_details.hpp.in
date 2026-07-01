@@ -1,20 +1,42 @@
 #pragma once
 
 #include <string>
+#include <iostream>
+#include <fmt/format.h>
 
-namespace pwc{
+namespace fraycast{
 
-inline const std::string PWC_BUILD_ARCH = "@PWC_BUILD_ARCH@";
-inline const std::string PWC_BUILD_TYPE = "@PWC_BUILD_TYPE@";
-inline const std::string PWC_BUILD_PLATFORM = "@PWC_BUILD_PLATFORM@";
-inline const std::string PWC_BUILD_TIME = "@PWC_BUILD_TIME@";
-inline const std::string PWC_BUILD_NOTES = "@PWC_BUILD_NOTES@";
-inline const std::string PWC_REPO_URL = "@PWC_REPO_URL@";
+inline const std::string FRAYCAST_BUILD_ARCH = "@FRAYCAST_BUILD_ARCH@";
+inline const std::string FRAYCAST_BUILD_TYPE = "@FRAYCAST_BUILD_TYPE@";
+inline const std::string FRAYCAST_BUILD_PLATFORM = "@FRAYCAST_BUILD_PLATFORM@";
+inline const std::string FRAYCAST_BUILD_TIME = "@FRAYCAST_BUILD_TIME@";
+inline const std::string FRAYCAST_BUILD_NOTES = "@FRAYCAST_BUILD_NOTES@";
 
 inline constexpr int BUILD_VERSION_MAJOR = @PROJECT_VERSION_MAJOR@;
 inline constexpr int BUILD_VERSION_MINOR = @PROJECT_VERSION_MINOR@;
 inline constexpr int BUILD_VERSION_PATCH = @PROJECT_VERSION_PATCH@;
 
 inline const std::string BUILD_VERSION_STRING = "@PROJECT_VERSION@";
+
+
+inline std::string getFormattedBuildDetails(){
+
+    return fmt::format(
+    "Fraycast version {}\n"
+    "{}\n"
+    "Compiled at {} on {} - {}"
+    "\n\n",
+    fraycast::BUILD_VERSION_STRING,
+    fraycast::FRAYCAST_BUILD_NOTES,
+    fraycast::FRAYCAST_BUILD_TIME, fraycast::FRAYCAST_BUILD_PLATFORM, fraycast::FRAYCAST_BUILD_ARCH
+    );
+
+}
+
+inline void printBuildDetails(){
+
+    std::cout << getFormattedBuildDetails();
+
+}
 
 }

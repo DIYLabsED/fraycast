@@ -5,6 +5,7 @@
 
 #include <fmt/format.h>
 
+#include <fraycast/fraycast_build_details.hpp>
 #include <fraycast/global/global.hpp>
 #include <fraycast/util/argparse/argparse.hpp>
 
@@ -25,6 +26,9 @@ void readCoreConfig();
 
 
 int main(int argc, char** argv){
+
+  fraycast::printBuildDetails();
+  TENGINE_LOG_INFO("main()", fraycast::getFormattedBuildDetails());
 
   // --- Initialize globals ---
   argParse.init(argc, argv);
@@ -55,5 +59,7 @@ void readCoreConfig(){
   fraycast::fraycastGlobals.CFG_WIN_FULLSCREEN     = sdlFlags.getBoolean("fullscreen", false);
   fraycast::fraycastGlobals.CFG_WIN_GRABS_MOUSE    = sdlFlags.getBoolean("grabs_mouse", false);
   fraycast::fraycastGlobals.CFG_WIN_GRABS_KEYBOARD = sdlFlags.getBoolean("grabs_keyboard", false);
+
+  TENGINE_LOG_INFO("readCoreConfig()", fmt::format("Populated global config from {}", cfgFilePath));
 
 }
